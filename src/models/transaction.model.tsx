@@ -5,3 +5,8 @@ export interface ITransaction {
     deposit?: string;
     balance: string;   
 }
+
+export interface ITransactionParams {
+    account: string;
+    balance: string;
+}

@@ -5,14 +5,16 @@ import { Route } from 'react-router-dom';
 import LoginComponent from './components/login.component';
 import RegisterComponent from './components/register.component';
 import Home from './pages/home.page';
+import Account from './pages/account.page';
+import TransactionComponent from './components/transaction.component';
 
 const loginRoutes: IRoute[] = [
     { path: '/auth/signin', component: LoginComponent },
     { path: '/auth/register', component: RegisterComponent }
 ];
 
-const homeRoutes: IRoute[] = [
-
+const accountRoutes: IRoute[] = [
+    { path: '/account/:account', component: TransactionComponent }
 ];
 
 export const routes: IRoute[] = [
@@ -24,7 +26,11 @@ export const routes: IRoute[] = [
     {
         path: '/home',
         component: Home,
-        routes: homeRoutes
+    },
+    {
+        path: '/account',
+        component: Account,
+        routes: accountRoutes
     }
 ];
 
