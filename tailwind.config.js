@@ -5,9 +5,8 @@ module.exports = {
   purge: [],
   theme: {
     extend: {
-      backgroundColor: {
-        'primary': '#363636',
-        'secondary': '#3E3E3E'
+      spacing: {
+        '84': '21rem',
       }
     },
   },

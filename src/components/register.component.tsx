@@ -1,9 +1,12 @@
 import React from 'react';
+import AuthCard from './subcomponents/auth-card.component';
 
 function RegisterComponent() {
-    
+
     return (
-        <div>Register Login Route</div>
+        <div className="z-10">
+            <AuthCard buttonText1="Register" buttonText2="Sign In" url1="" url2="/auth/signin"/>
+        </div>
     );
 }
 
