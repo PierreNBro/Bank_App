@@ -1,6 +1,5 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useState, useEffect } from 'react';
-import { prototype } from 'stream';
+import axios, { AxiosRequestConfig } from 'axios';
+import { useState, useEffect, useReducer } from 'react';
 
 export interface IResponse {
     status: number;
@@ -53,6 +52,7 @@ export function usePatch() {
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
+    
     // useEffect();
     return [response, loading, hasError];
 }
