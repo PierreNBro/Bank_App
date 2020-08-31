@@ -1,4 +1,5 @@
 import React from 'react';
+import AccountComponent from '../components/account.component';
 
 function Home() {
     return (
@@ -7,11 +8,16 @@ function Home() {
                 HOME
             </div>
             <div className="flex flex-col w-full h-screen p-10">
-                <div className="h-half">Accounts</div>
-                <div className="h-half">Joint Accounts</div>
+                <div className="h-half">
+                    <div className="mb-4">Accounts:</div>
+                    <AccountComponent />
+                </div>
+                <div className="h-half">
+                    <div className="mb-4">Joint Accounts:</div>
+                    <AccountComponent />
+                </div>
             </div>
         </div>
-
     );
 }
 
