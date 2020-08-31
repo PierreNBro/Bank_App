@@ -2,7 +2,10 @@ import React from 'react';
 
 function Account() {
     return (
-        <div>Account</div>
+        <div>
+            <div className="inline-block h-screen w-24">Accounts</div>
+
+        </div>
     );
 }
 
