@@ -1,9 +1,12 @@
 import React from 'react';
+import { IAccount } from '../models/account.model';
 
-function AccountComponent() {
+function AccountComponent({ accountId, balance }: IAccount) {
     return (
         <div className="bg-gray-300 w-84 max-w-xs h-48 shadow-md rounded p-8">
-            Account: 1234
+            Account: {accountId}
+            <div className="text-3xl mt-8 ">Balance:</div>
+            <div className="text-xl truncate whitespace-no-wrap">{balance} CAD</div>
         </div>
     );
 }

@@ -12,5 +12,5 @@ export enum AccountType {
 export interface IAccount {
     accountId: string;
     balance: string;
-    type: AccountType.PRIMARY | AccountType.JOINT;
+    type?: AccountType.PRIMARY | AccountType.JOINT;
 }

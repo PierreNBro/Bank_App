@@ -10,11 +10,11 @@ function Home() {
             <div className="flex flex-col w-full h-screen p-10">
                 <div className="h-half">
                     <div className="mb-4">Accounts:</div>
-                    <AccountComponent />
+                    <AccountComponent accountId="1234" balance="50,000.00" />
                 </div>
                 <div className="h-half">
                     <div className="mb-4">Joint Accounts:</div>
-                    <AccountComponent />
+                    <AccountComponent accountId="4567" balance="200.00"/>
                 </div>
             </div>
         </div>
