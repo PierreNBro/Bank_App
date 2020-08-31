@@ -3,3 +3,5 @@ export interface IRoute {
     component: (props?: any) => JSX.Element;
     routes?: IRoute[];
 }
+
+export interface IProp {};

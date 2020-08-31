@@ -1,5 +1,5 @@
 import React from 'react';
-import { IRoute } from './models/routes.model';
+import { IRoute, IProp } from './models/routes.model';
 import Login from './pages/login.page';
 import { Route } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ export const routes: IRoute[] = [
 
 export function RouteWithSubRoutes(route: IRoute) {
     const { path, routes } = route;
-    const routeProps = (props: any) => (
+    const routeProps = (props: IProp) => (
         <route.component {...props} routes={routes} />
     );
 
