@@ -10,3 +10,7 @@
   background-size: cover;
   background-attachment: fixed;
 }
+
+.modal {
+  transition: opacity 0.25s ease;
+}

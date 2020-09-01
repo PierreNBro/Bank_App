@@ -18,5 +18,5 @@ export interface ITransactionParams {
 
 export interface IButton {
     text: string;
-    color: string;
+    color?: string;
 }

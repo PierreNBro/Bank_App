@@ -5,6 +5,8 @@ import Record from './subcomponents/record.component';
 import { TokenContext, useGet } from '../services/api.service';
 import { AxiosRequestConfig } from 'axios';
 import { IAccountSingleResponse } from '../models/account.model';
+import Button from './button.component';
+import Modal from './subcomponents/modal.component';
 
 function TransactionComponent({balance}: any) {
     const { account }: ITransactionParams = useParams();
@@ -41,10 +43,18 @@ function TransactionComponent({balance}: any) {
 
     return (
         <div className="flex flex-col h-102">
+            <Modal text="DEPOSIT"/>
             <div>Account: {account}</div>
             <div className="mb-8">Balance: &#36;{resp.response.data.account.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} CAD</div>
 
-            <div>Transaction History:</div>
+            <div className="flex flex-row justify-between mb-8">
+                <div>Transaction History:</div>
+                <div>
+                    <Button text="TRANSFER" color="red" />
+                    <Button text="DEPOSIT" color="blue" />
+                    <Button text="WIDTHDRAW" color="green" />
+                </div>
+            </div>
             <div className=" bg-gray-500 flex flex-row justify-between px-4 border-b-2 border-black">
                 <div>Account</div>
                 <div>Details</div>
