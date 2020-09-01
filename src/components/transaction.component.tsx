@@ -4,7 +4,7 @@ import { ITransactionParams } from '../models/transaction.model';
 import Record from './subcomponents/record.component';
 
 function TransactionComponent() {
-    const { account, balance }: ITransactionParams = useParams();
+    const { account }: ITransactionParams = useParams();
     return (
         <div className="flex flex-col h-102">
             <div>Account: {account}</div>
