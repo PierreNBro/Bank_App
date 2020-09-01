@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import AccountComponent from '../components/account.component';
 import { useGet, TokenContext } from '../services/api.service';
 import { AxiosRequestConfig } from 'axios';
-import { IAccount, AccountType, IAccountResponse } from '../models/account.model';
+import { AccountType, IAccountResponse } from '../models/account.model';
 
 function Home() {
     const { token } = useContext(TokenContext);
@@ -15,7 +15,14 @@ function Home() {
 
     useEffect(() => {
         setUrl('http://localhost:3000/api/accounts');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    if (hasError) {
+        return (
+            <div>Error</div>
+        );
+    }
 
     if (loading || response === null) {
         return (
@@ -32,7 +39,7 @@ function Home() {
                 <div className="flex flex-col justify-start h-half">
                     <div className="mb-4">Accounts:</div>
                     <div className="flex flex-row justify-start overflow-scroll">
-                        {response!.data.accounts.map((account: IAccount, i: number) => (
+                        {response!.data.accounts.map((account, i) => (
                             account.type === AccountType.PRIMARY ?
                                 <AccountComponent key={i} accountId={account.accountId} balance={account.balance} />
                                 : null
@@ -42,7 +49,7 @@ function Home() {
                 <div className="flex flex-col justify-start h-half">
                     <div className="mb-4">Joint Accounts:</div>
                     <div className="flex flex-row justify-start overflow-scroll">
-                        {response!.data.accounts.map((account: IAccount, i: number) => (
+                        {response!.data.accounts.map((account, i) => (
                             account.type === AccountType.JOINT ?
                                 <AccountComponent key={i} accountId={account.accountId} balance={account.balance} />
                                 : null

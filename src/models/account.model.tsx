@@ -9,6 +9,10 @@ export enum AccountType {
     JOINT = "JOINT"
 }
 
+export interface IAccountSingleResponse {
+    account: IAccount;
+}
+
 export interface IAccountResponse {
     accounts: IAccount[];
 }

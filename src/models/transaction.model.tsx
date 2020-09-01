@@ -1,5 +1,10 @@
+export interface ITransactionResponse {
+    transactions: ITransaction[];
+}
+
 export interface ITransaction {
-    date: Date;
+    accountId?: string;
+    date?: Date;
     description: string;
     widthrawal?: string;
     deposit?: string;
@@ -9,4 +14,9 @@ export interface ITransaction {
 export interface ITransactionParams {
     account: string;
     balance: string;
+}
+
+export interface IButton {
+    text: string;
+    color: string;
 }

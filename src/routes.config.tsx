@@ -35,7 +35,7 @@ export const routes: IRoute[] = [
     }
 ];
 
-export function RouteWithSubRoutes(route: IRoute) {
+export function RouteWithSubRoutes(route: IRoute, prop?: any) {
     const { path, routes } = route;
     const { token } = useContext(TokenContext);
     const {pathname} = useLocation();
