@@ -17,7 +17,6 @@ function App() {
           {routes.map((route: IRoute, i: number) => (
             <RouteWithSubRoutes key={i} {...route} />
           ))}
-          {}
           <Route exact path="/">
             <Redirect to="/auth/signin" />
           </Route>

@@ -58,36 +58,42 @@ export function useAuth(opt?: AxiosRequestConfig) {
     return {response, loading, hasError, setType, setCredentials};
 }
 
-export function useGet(url: string, opt: AxiosRequestConfig) {
-    const [response, setResponse] = useState<null | IResponse<any>>(null);
+export function useGet<T>( opt: AxiosRequestConfig) {
+    const [response, setResponse] = useState<null | IResponse<T>>(null);
+    const [url, setUrl] = useState<null | string>(null);
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
     useEffect(() => {
-        const get = async () => {
-            try {
-                setLoading(true);
-                const response: IResponse<any> = await axios.get(url, opt);
-                setResponse(response);
-                setLoading(false);
-            } catch (e) {
-                setHasError(true);
-                setLoading(false);
+        if (url !== null) {
+            const get = async () => {
+                try {
+                    setLoading(true);
+                    const response: IResponse<T> = await axios.get(url, opt);
+                    console.log(`Response Data: ${response.data}`);
+                    setResponse(response);
+                    setLoading(false);
+                } catch (e) {
+                    setHasError(true);
+                    console.log(`Error on Response: ${e}`);
+                    setLoading(false);
+                }
             }
+            get();
         }
-        get();
-    }, [url, opt]);
-    return [response, loading, hasError];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [url]);
+    return {response, loading, hasError, setUrl};
 }
 
-export function usePost(url: string, opt: AxiosRequestConfig, payload: any) {
-    const [response, setResponse] = useState<null | IResponse<any>>(null);
+export function usePost<T>(url: string, opt: AxiosRequestConfig, payload: any) {
+    const [response, setResponse] = useState<null | IResponse<T>>(null);
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
     useEffect(() => {
         const post = async () => {
             try {
                 setLoading(true);
-                const response: IResponse<any> = await axios.post(url, payload, opt);
+                const response: IResponse<T> = await axios.post(url, payload, opt);
                 setResponse(response);
                 setLoading(false);
             } catch (e) {
@@ -97,7 +103,7 @@ export function usePost(url: string, opt: AxiosRequestConfig, payload: any) {
         }
         post();
     }, [url, payload, opt]);
-    return [response, loading, hasError];
+    return {response, loading, hasError};
 }
 
 export function usePatch() {
