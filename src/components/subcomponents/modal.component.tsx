@@ -1,7 +1,7 @@
 import React from 'react';
 import { IButton } from '../../models/transaction.model';
 
-function Modal({text}: IButton) {
+function Modal({ text, description }: IButton) {
     return (
         <div className="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
             <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
@@ -18,7 +18,7 @@ function Modal({text}: IButton) {
                     </div>
 
                     <div className="flex justify-end pt-2">
-    <button className="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2">{text}</button>
+                        <button className="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2">{text}</button>
                         <button className="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400">CANCEL</button>
                     </div>
 

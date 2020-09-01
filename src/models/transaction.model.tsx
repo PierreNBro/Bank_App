@@ -1,3 +1,5 @@
+import { MouseEvent } from 'react';
+
 export interface ITransactionResponse {
     transactions: ITransaction[];
 }
@@ -19,4 +21,6 @@ export interface ITransactionParams {
 export interface IButton {
     text: string;
     color?: string;
+    description?: string;
+    onClick?: ((event: MouseEvent) => void) | undefined
 }

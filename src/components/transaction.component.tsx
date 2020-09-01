@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ITransactionParams, ITransactionResponse } from '../models/transaction.model';
 import Record from './subcomponents/record.component';
@@ -9,6 +9,7 @@ import Button from './button.component';
 import Modal from './subcomponents/modal.component';
 
 function TransactionComponent({balance}: any) {
+    const [modalType, setModalType] = useState<any>(null);
     const { account }: ITransactionParams = useParams();
     const { token } = useContext(TokenContext);
     const opt: AxiosRequestConfig = {
@@ -18,6 +19,10 @@ function TransactionComponent({balance}: any) {
     }
     const { response, loading, hasError, setUrl } = useGet<ITransactionResponse>(opt);
     const resp = useGet<IAccountSingleResponse>(opt);
+
+    const setModal = (text: string, description: string) => {
+        setModalType({text, description});
+    }
 
     useEffect(() => {
         setUrl('http://localhost:3000/api/accounts/transaction');
@@ -43,16 +48,16 @@ function TransactionComponent({balance}: any) {
 
     return (
         <div className="flex flex-col h-102">
-            <Modal text="DEPOSIT"/>
+            <Modal text={modalType.text} description={modalType.description}/>
             <div>Account: {account}</div>
             <div className="mb-8">Balance: &#36;{resp.response.data.account.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} CAD</div>
 
             <div className="flex flex-row justify-between mb-8">
                 <div>Transaction History:</div>
                 <div>
-                    <Button text="TRANSFER" color="red" />
-                    <Button text="DEPOSIT" color="blue" />
-                    <Button text="WIDTHDRAW" color="green" />
+                    <Button text="TRANSFER" color="red" onClick={() => setModal('TRANSFER', 'Transfer')}/>
+                    <Button text="DEPOSIT" color="blue" onClick={() => setModal('DEPOSIT', 'Deposit')}/>
+                    <Button text="WIDTHDRAW" color="green" onClick={() => setModal('WIDTHRAW', 'Widthraw')}/>
                 </div>
             </div>
             <div className=" bg-gray-500 flex flex-row justify-between px-4 border-b-2 border-black">
