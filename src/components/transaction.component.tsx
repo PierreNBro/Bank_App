@@ -63,7 +63,7 @@ function TransactionComponent({balance}: any) {
         <div className="flex flex-col h-102">
             <Modal text={modalType?.text} description={modalType?.description} onClick={(event) => toggleModal(event)}/>
             <div>Account: {account}</div>
-            <div className="mb-8">Balance: &#36;{resp.response.data.account.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} CAD</div>
+            <div className="mb-8">Balance: &#36;{resp.response.data.account.balance.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")} CAD</div>
 
             <div className="flex flex-row justify-between mb-8">
                 <div>Transaction History:</div>
