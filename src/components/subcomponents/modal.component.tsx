@@ -37,14 +37,12 @@ function Modal({ accountId, description, onClick, callback }: ITransaction) {
                 deposit: description === 'Deposit' ? totalAmount : undefined
             }
             setPayload(transaction);
-            console.log(totalAmount);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [totalAmount])
 
     useEffect(() => {
         if (response?.status === 201) {
-            console.log('Fetching new data!');
             onClick!();
             callback();
         }

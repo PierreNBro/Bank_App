@@ -71,7 +71,6 @@ export function useGet<T>(opt: AxiosRequestConfig) {
                     const response: IResponse<T> = await axios.get(url, opt);
                     setResponse(response);
                     if (response?.data && response?.data) {
-                        console.log(JSON.stringify(response?.data));
                     }
                     setLoading(false);
                 } catch (e) {

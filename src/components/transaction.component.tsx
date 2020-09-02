@@ -59,13 +59,10 @@ function TransactionComponent({balance}: any) {
             <div>Loading...</div>
         );
     }
-    if (response?.data && response?.data.transactions) {
-        response?.data.transactions.map((t,i) => console.log('Account Id:', t.accountId))
-    }
+    
     return (
         <div className="flex flex-col h-102">
             <Modal accountId={(resp.response.data as IAccountSingleResponse).account.accountId} description={modalType?.description} onClick={(event) => toggleModal(event)} callback={() => {
-                console.log('This should update!');
                 history.goBack();
             }}/>
             <div>Account: {account}</div>
