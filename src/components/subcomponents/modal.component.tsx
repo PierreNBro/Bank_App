@@ -10,7 +10,7 @@ function Modal({ text, description, onClick }: IButton) {
                 <div className="modal-content py-4 text-left px-6">
 
                     <div className="flex justify-between items-center pb-3">
-                        <p className="text-2xl font-bold">Simple Modal!</p>
+                        <p className="text-2xl font-bold mb-2">Transaction</p>
                         <div className="modal-close cursor-pointer z-50" onClick={onClick}>
                             <svg className="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
                                 <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
@@ -19,7 +19,8 @@ function Modal({ text, description, onClick }: IButton) {
                     </div>
 
                     <div>
-                        <input type="text" value={amount} onChange={event => setAmount(event.target.value)}/>
+                        <label className="block text-gray-700 text-sm font-bold mb-2">{description} Amount:</label>
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={amount} onChange={event => setAmount(event.target.value)} />
                     </div>
 
                     <div className="flex justify-end pt-2">
