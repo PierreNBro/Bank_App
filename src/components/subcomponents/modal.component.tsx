@@ -1,23 +1,41 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { IButton, ITransaction } from '../../models/transaction.model';
+import { ITransaction, ITransactionResponse } from '../../models/transaction.model';
 import { AxiosRequestConfig } from 'axios';
 import { TokenContext, usePost } from '../../services/api.service';
-import { queries } from '@testing-library/react';
 
-function Modal({ description, onClick }: ITransaction) {
+function Modal({ accountId, description, widthrawal, deposit, onClick }: ITransaction) {
     const { token } = useContext(TokenContext);
+    const [totalAmount, setTotalAmount] = useState<null | string>(null);
     const [amount, setAmount] = useState('');
-    const [cent, setCent] = useState('');
+    const [cent, setCent] = useState('00');
     const opt: AxiosRequestConfig = {
         headers: {
             'Authorization': token
         }
     }
-    const { response, loading, hasError, setUrl, setPayload } = usePost(opt);
+    const { setUrl, setPayload } = usePost<ITransactionResponse, ITransaction>(opt);
+
+    const convertTotal = (amount: string, cent: string) => {
+        setTotalAmount(`${amount}.${cent}`);
+    }
 
     useEffect(() => {
         setUrl('http://localhost:3000/api/accounts/transaction');
     }, []);
+
+    useEffect(() => {
+        if (totalAmount !== null) {
+            const transaction: ITransaction = {
+                accountId: accountId,
+                description: description,
+                widthrawal: widthrawal,
+                deposit: deposit
+            }
+            setPayload(transaction);
+            console.log(totalAmount);
+        }
+
+    }, [totalAmount])
 
     return (
         <div className="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
@@ -38,12 +56,12 @@ function Modal({ description, onClick }: ITransaction) {
                         <label className="block text-gray-700 text-sm font-bold mb-2">{description} Amount:</label>
                         <div className="flex flex-row">
                             &#36;<input className="shadow appearance-none border rounded w-full mr-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={!isNaN(Number(amount.replace(/,/g, ''))) ? Number(amount.replace(/,/g, '')).toLocaleString() : '0'} onChange={event => setAmount(event.currentTarget.value)} />
-                            <input className="text-center shadow appearance-none border rounded w-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={('00' + Number(cent)).slice(-2)} onChange={event => setCent(event.currentTarget.value)} />
+                            <input className="text-center shadow appearance-none border rounded w-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={cent} onChange={event => setCent(('00' + Number(event.currentTarget.value)).slice(-2))} />
                         </div>
                     </div>
 
                     <div className="flex justify-end pt-2">
-                        <button className="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2">{description}</button>
+                        <button className="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2" onClick={() => convertTotal(amount, cent)}>{description}</button>
                         <button className="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400" onClick={onClick}>CANCEL</button>
                     </div>
 
