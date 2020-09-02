@@ -11,7 +11,8 @@ export interface ITransaction {
     widthrawal?: string;
     deposit?: string;
     balance?: string;   
-    onClick?: ((event: MouseEvent) => void) | undefined
+    callback?: any;
+    onClick?: ((event?: MouseEvent) => void) | undefined
 }
 
 export interface ITransactionParams {
@@ -23,5 +24,5 @@ export interface IButton {
     text: string;
     color?: string;
     description?: string;
-    onClick?: ((event: MouseEvent) => void) | undefined
+    onClick?: ((event?: MouseEvent) => void) | undefined
 }

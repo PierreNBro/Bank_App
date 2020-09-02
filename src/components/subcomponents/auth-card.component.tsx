@@ -24,7 +24,6 @@ function AuthCard({ buttonText1, buttonText2, url2 }: IAuthCard) {
 
     useEffect(() => {
         if (response !== null) {
-            console.log('Response: ', response);
             setToken(response.data.token);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

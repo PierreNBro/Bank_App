@@ -69,12 +69,14 @@ export function useGet<T>(opt: AxiosRequestConfig) {
                 try {
                     setLoading(true);
                     const response: IResponse<T> = await axios.get(url, opt);
-                    console.log(`Response Data: ${response.data}`);
                     setResponse(response);
+                    if (response?.data && response?.data) {
+                        console.log(JSON.stringify(response?.data));
+                    }
                     setLoading(false);
                 } catch (e) {
                     setHasError(true);
-                    console.log(`Error on Response: ${e}`);
+                    console.log(`Error: ${e}`);
                     setLoading(false);
                 }
             }
@@ -92,8 +94,9 @@ export function usePost<T, D>(opt: AxiosRequestConfig) {
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
     useEffect(() => {
-        const post = async () => {
-            if (url !== null && payload !== null) {
+        if (url !== null && payload !== null) {
+            const post = async () => {
+
                 try {
                     setLoading(true);
                     const response: IResponse<T> = await axios.post(url, payload, opt);
@@ -106,7 +109,8 @@ export function usePost<T, D>(opt: AxiosRequestConfig) {
             }
             post();
         }
-    }, [url, payload, opt]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [url, payload]);
     return { response, loading, hasError, setUrl, setPayload };
 }
 

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, MouseEvent } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { ITransactionParams, ITransactionResponse } from '../models/transaction.model';
 import Record from './subcomponents/record.component';
 import { TokenContext, useGet } from '../services/api.service';
@@ -9,6 +9,7 @@ import Button from './button.component';
 import Modal from './subcomponents/modal.component';
 
 function TransactionComponent({balance}: any) {
+    const history = useHistory();
     const [modalType, setModalType] = useState<any>(null);
     const { account }: ITransactionParams = useParams();
     const { token } = useContext(TokenContext);
@@ -17,9 +18,8 @@ function TransactionComponent({balance}: any) {
             'Authorization': token
         }
     }
-    const { response, loading, hasError, setUrl } = useGet<ITransactionResponse>(opt);
     const resp = useGet<IAccountSingleResponse>(opt);
-
+    const { response, loading, hasError, setUrl } = useGet<ITransactionResponse>(opt);
     const toggleModal = (event?: MouseEvent, text?: string, description?: string) => {
         if (event) {
             event.preventDefault();
@@ -38,7 +38,8 @@ function TransactionComponent({balance}: any) {
     }
 
     useEffect(() => {
-        setUrl('http://localhost:3000/api/accounts/transaction');
+
+        setUrl(`http://localhost:3000/api/accounts/${account}/transaction`);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -58,12 +59,17 @@ function TransactionComponent({balance}: any) {
             <div>Loading...</div>
         );
     }
-
+    if (response?.data && response?.data.transactions) {
+        response?.data.transactions.map((t,i) => console.log('Account Id:', t.accountId))
+    }
     return (
         <div className="flex flex-col h-102">
-            <Modal description={modalType?.description} onClick={(event) => toggleModal(event)}/>
+            <Modal accountId={(resp.response.data as IAccountSingleResponse).account.accountId} description={modalType?.description} onClick={(event) => toggleModal(event)} callback={() => {
+                console.log('This should update!');
+                history.goBack();
+            }}/>
             <div>Account: {account}</div>
-            <div className="mb-8">Balance: &#36;{resp.response.data.account.balance.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")} CAD</div>
+            <div className="mb-8">Balance: &#36;{(resp.response.data as IAccountSingleResponse).account.balance.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")} CAD</div>
 
             <div className="flex flex-row justify-between mb-8">
                 <div>Transaction History:</div>
@@ -74,11 +80,11 @@ function TransactionComponent({balance}: any) {
                 </div>
             </div>
             <div className=" bg-gray-500 flex flex-row justify-between px-4 border-b-2 border-black">
-                <div>Account</div>
-                <div>Details</div>
-                <div>Widthraw</div>
-                <div>Deposit</div>
-                <div>Balance</div>
+                <div className="flex-1">Account</div>
+                <div className="flex-1">Details</div>
+                <div className="flex-1">Widthraw</div>
+                <div className="flex-1">Deposit</div>
+                <div className="flex justify-end">Balance</div>
             </div>
             <div className="bg-gray-300 w-full h-full max-h-30 overflow-scroll">
                 {response!.data.transactions ? response!.data.transactions.map((transaction, i) => (

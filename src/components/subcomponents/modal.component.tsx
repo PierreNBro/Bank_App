@@ -3,7 +3,7 @@ import { ITransaction, ITransactionResponse } from '../../models/transaction.mod
 import { AxiosRequestConfig } from 'axios';
 import { TokenContext, usePost } from '../../services/api.service';
 
-function Modal({ accountId, description, widthrawal, deposit, onClick }: ITransaction) {
+function Modal({ accountId, description, onClick, callback }: ITransaction) {
     const { token } = useContext(TokenContext);
     const [totalAmount, setTotalAmount] = useState<null | string>(null);
     const [amount, setAmount] = useState('');
@@ -11,9 +11,13 @@ function Modal({ accountId, description, widthrawal, deposit, onClick }: ITransa
     const opt: AxiosRequestConfig = {
         headers: {
             'Authorization': token
+        },
+        params: {
+            currency: 'CA'
         }
-    }
-    const { setUrl, setPayload } = usePost<ITransactionResponse, ITransaction>(opt);
+    };
+
+    const { response, setUrl, setPayload } = usePost<ITransactionResponse, ITransaction>(opt);
 
     const convertTotal = (amount: string, cent: string) => {
         setTotalAmount(`${amount}.${cent}`);
@@ -21,6 +25,7 @@ function Modal({ accountId, description, widthrawal, deposit, onClick }: ITransa
 
     useEffect(() => {
         setUrl('http://localhost:3000/api/accounts/transaction');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -28,14 +33,23 @@ function Modal({ accountId, description, widthrawal, deposit, onClick }: ITransa
             const transaction: ITransaction = {
                 accountId: accountId,
                 description: description,
-                widthrawal: widthrawal,
-                deposit: deposit
+                widthrawal: description === 'Widthraw' ? totalAmount : undefined,
+                deposit: description === 'Deposit' ? totalAmount : undefined
             }
             setPayload(transaction);
             console.log(totalAmount);
         }
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [totalAmount])
+
+    useEffect(() => {
+        if (response?.status === 201) {
+            console.log('Fetching new data!');
+            onClick!();
+            callback();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [response?.status]);
 
     return (
         <div className="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">

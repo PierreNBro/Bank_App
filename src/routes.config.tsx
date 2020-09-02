@@ -41,7 +41,6 @@ export function RouteWithSubRoutes(route: IRoute, prop?: any) {
     const {pathname} = useLocation();
     const history = useHistory();
     useEffect(() => {
-        console.log('Redirect with token: ', token);
         if (token !== null && pathname.includes('/auth')) {
             history.push('/home');
         }
