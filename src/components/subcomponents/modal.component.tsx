@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IButton } from '../../models/transaction.model';
 
 function Modal({ text, description, onClick }: IButton) {
+    const [amount, setAmount] = useState('');
     return (
         <div className="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
             <div className="modal-overlay absolute w-full h-full bg-gray-900 opacity-50" onClick={onClick}></div>
@@ -15,6 +16,10 @@ function Modal({ text, description, onClick }: IButton) {
                                 <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
                             </svg>
                         </div>
+                    </div>
+
+                    <div>
+                        <input type="text" value={amount} onChange={event => setAmount(event.target.value)}/>
                     </div>
 
                     <div className="flex justify-end pt-2">
