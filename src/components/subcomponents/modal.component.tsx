@@ -1,9 +1,23 @@
-import React, { useState } from 'react';
-import { IButton } from '../../models/transaction.model';
+import React, { useState, useEffect, useContext } from 'react';
+import { IButton, ITransaction } from '../../models/transaction.model';
+import { AxiosRequestConfig } from 'axios';
+import { TokenContext, usePost } from '../../services/api.service';
+import { queries } from '@testing-library/react';
 
-function Modal({ text, description, onClick }: IButton) {
+function Modal({ description, onClick }: ITransaction) {
+    const { token } = useContext(TokenContext);
     const [amount, setAmount] = useState('');
     const [cent, setCent] = useState('');
+    const opt: AxiosRequestConfig = {
+        headers: {
+            'Authorization': token
+        }
+    }
+    const { response, loading, hasError, setUrl, setPayload } = usePost(opt);
+
+    useEffect(() => {
+        setUrl('http://localhost:3000/api/accounts/transaction');
+    }, []);
 
     return (
         <div className="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
@@ -23,13 +37,13 @@ function Modal({ text, description, onClick }: IButton) {
                     <div>
                         <label className="block text-gray-700 text-sm font-bold mb-2">{description} Amount:</label>
                         <div className="flex flex-row">
-                            &#36;<input className="shadow appearance-none border rounded w-full mr-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={Number(amount.replace(/,/g, '')).toLocaleString()} onChange={event => setAmount(event.currentTarget.value)} />
+                            &#36;<input className="shadow appearance-none border rounded w-full mr-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={!isNaN(Number(amount.replace(/,/g, ''))) ? Number(amount.replace(/,/g, '')).toLocaleString() : '0'} onChange={event => setAmount(event.currentTarget.value)} />
                             <input className="text-center shadow appearance-none border rounded w-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={('00' + Number(cent)).slice(-2)} onChange={event => setCent(event.currentTarget.value)} />
                         </div>
                     </div>
 
                     <div className="flex justify-end pt-2">
-                        <button className="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2">{text}</button>
+                        <button className="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2">{description}</button>
                         <button className="modal-close px-4 bg-indigo-500 p-3 rounded-lg text-white hover:bg-indigo-400" onClick={onClick}>CANCEL</button>
                     </div>
 

@@ -10,7 +10,7 @@ export const TokenContext: Context<IAuthContext> = createContext({
 
 export const TokenContextProvider = (props: any) => {
     const setToken = (token: string) => {
-        setState({...state, token});
+        setState({ ...state, token });
     }
 
     const [state, setState] = useState({
@@ -36,7 +36,7 @@ export function useAuth(opt?: AxiosRequestConfig) {
     const [hasError, setHasError] = useState(false);
     const [type, setType] = useState<'signin' | 'register' | null>(null);
     const [credentials, setCredentials] = useState<null | IAuthCredentials>(null);
-    
+
     useEffect(() => {
         if (credentials !== null && type !== null) {
             const post = async () => {
@@ -45,7 +45,7 @@ export function useAuth(opt?: AxiosRequestConfig) {
                     const response: IResponse<IToken> = await axios.post(`http://localhost:3000/api/auth/${type}`, credentials, opt);
                     setResponse(response);
                     setLoading(false);
-                } catch(e) {
+                } catch (e) {
                     console.log("Error: ", e);
                     setHasError(true);
                     setLoading(false);
@@ -55,10 +55,10 @@ export function useAuth(opt?: AxiosRequestConfig) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [credentials]);
-    return {response, loading, hasError, setType, setCredentials};
+    return { response, loading, hasError, setType, setCredentials };
 }
 
-export function useGet<T>( opt: AxiosRequestConfig) {
+export function useGet<T>(opt: AxiosRequestConfig) {
     const [response, setResponse] = useState<null | IResponse<T>>(null);
     const [url, setUrl] = useState<null | string>(null);
     const [loading, setLoading] = useState(false);
@@ -82,35 +82,39 @@ export function useGet<T>( opt: AxiosRequestConfig) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url]);
-    return {response, loading, hasError, setUrl};
+    return { response, loading, hasError, setUrl };
 }
 
-export function usePost<T>(url: string, opt: AxiosRequestConfig, payload: any) {
+export function usePost<T, D>(opt: AxiosRequestConfig) {
     const [response, setResponse] = useState<null | IResponse<T>>(null);
+    const [payload, setPayload] = useState<null | D>(null);
+    const [url, setUrl] = useState<null | string>(null);
     const [loading, setLoading] = useState(false);
     const [hasError, setHasError] = useState(false);
     useEffect(() => {
         const post = async () => {
-            try {
-                setLoading(true);
-                const response: IResponse<T> = await axios.post(url, payload, opt);
-                setResponse(response);
-                setLoading(false);
-            } catch (e) {
-                setHasError(true);
-                setLoading(false);
+            if (url !== null && payload !== null) {
+                try {
+                    setLoading(true);
+                    const response: IResponse<T> = await axios.post(url, payload, opt);
+                    setResponse(response);
+                    setLoading(false);
+                } catch (e) {
+                    setHasError(true);
+                    setLoading(false);
+                }
             }
+            post();
         }
-        post();
     }, [url, payload, opt]);
-    return {response, loading, hasError};
+    return { response, loading, hasError, setUrl, setPayload };
 }
 
 export function usePatch() {
     // const [response, setResponse] = useState(null);
     // const [loading, setLoading] = useState(false);
     // const [hasError, setHasError] = useState(false);
-    
+
     // useEffect();
     // return [response, loading, hasError];
 }
