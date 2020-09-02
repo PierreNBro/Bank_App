@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, MouseEvent } from 'react';
 import { useParams } from 'react-router-dom';
 import { ITransactionParams, ITransactionResponse } from '../models/transaction.model';
 import Record from './subcomponents/record.component';
@@ -20,8 +20,21 @@ function TransactionComponent({balance}: any) {
     const { response, loading, hasError, setUrl } = useGet<ITransactionResponse>(opt);
     const resp = useGet<IAccountSingleResponse>(opt);
 
-    const setModal = (text: string, description: string) => {
-        setModalType({text, description});
+    const toggleModal = (event?: MouseEvent, text?: string, description?: string) => {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        const modal = document.querySelector('.modal');
+        if (text && description) {
+            setModalType({text, description});
+            modal!.classList.toggle('opacity-0');
+            modal!.classList.toggle('pointer-events-none');
+        } else {
+            setModalType(null);
+            if (!modal!.classList.contains('opacity-0')) modal!.classList.add('opacity-0');
+            if (!modal!.classList.contains('pointer-events-none')) modal!.classList.add('pointer-events-none');
+        }
     }
 
     useEffect(() => {
@@ -48,16 +61,16 @@ function TransactionComponent({balance}: any) {
 
     return (
         <div className="flex flex-col h-102">
-            <Modal text={modalType.text} description={modalType.description}/>
+            <Modal text={modalType?.text} description={modalType?.description} onClick={(event) => toggleModal(event)}/>
             <div>Account: {account}</div>
             <div className="mb-8">Balance: &#36;{resp.response.data.account.balance.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} CAD</div>
 
             <div className="flex flex-row justify-between mb-8">
                 <div>Transaction History:</div>
                 <div>
-                    <Button text="TRANSFER" color="red" onClick={() => setModal('TRANSFER', 'Transfer')}/>
-                    <Button text="DEPOSIT" color="blue" onClick={() => setModal('DEPOSIT', 'Deposit')}/>
-                    <Button text="WIDTHDRAW" color="green" onClick={() => setModal('WIDTHRAW', 'Widthraw')}/>
+                    <Button text="TRANSFER" color="red" onClick={(event) => toggleModal(event, 'TRANSFER', 'Transfer')}/>
+                    <Button text="DEPOSIT" color="blue" onClick={(event) => toggleModal(event, 'DEPOSIT', 'Deposit')}/>
+                    <Button text="WIDTHDRAW" color="green" onClick={(event) => toggleModal(event, 'WIDTHRAW', 'Widthraw')}/>
                 </div>
             </div>
             <div className=" bg-gray-500 flex flex-row justify-between px-4 border-b-2 border-black">
