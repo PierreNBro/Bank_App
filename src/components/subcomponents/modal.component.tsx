@@ -1,19 +1,30 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { ITransaction, ITransactionResponse } from '../../models/transaction.model';
 import { AxiosRequestConfig } from 'axios';
 import { TokenContext, usePost } from '../../services/api.service';
+import { ConversionType } from '../../models/account.model';
+
+function usePrevious(value: ConversionType) {
+    const ref = useRef<ConversionType>();
+    useEffect(() => {
+        ref.current = value
+    });
+    return ref.current;
+}
 
 function Modal({ accountId, description, onClick, callback }: ITransaction) {
     const { token } = useContext(TokenContext);
     const [totalAmount, setTotalAmount] = useState<null | string>(null);
     const [amount, setAmount] = useState('');
     const [cent, setCent] = useState('00');
+    const [currency, setCurrency] = useState(ConversionType.CA);
+    const prevCurrency = usePrevious(currency);
     const opt: AxiosRequestConfig = {
         headers: {
             'Authorization': token
         },
         params: {
-            currency: 'CA'
+            currency: currency === ConversionType.CA ? 'CA' : currency === ConversionType.USD ? 'USD' : 'MXN' 
         }
     };
 
@@ -22,6 +33,38 @@ function Modal({ accountId, description, onClick, callback }: ITransaction) {
     const convertTotal = (amount: string, cent: string) => {
         setTotalAmount(`${amount}.${cent}`);
     }
+
+    useEffect(() => {
+        if (amount !== null && amount !== '0') {
+            const convertCurrency = (amount: string, currency: ConversionType) => {
+                const wasMXN: boolean = prevCurrency === ConversionType.MXN;
+                const wasCAD: boolean = prevCurrency === ConversionType.CA;
+                const wasUSD: boolean = prevCurrency === ConversionType.USD;
+                switch (currency) {
+                    case ConversionType.CA:
+                        if (wasMXN) return (parseFloat(amount) / ConversionType.MXN).toFixed(2);
+                        if (wasUSD) return ((parseFloat(amount) / ConversionType.USD)).toFixed(2);
+                        break;
+                    case ConversionType.MXN:
+                        if (wasCAD) return (parseFloat(amount) * currency).toFixed(2);
+                        if (wasUSD) return ((parseFloat(amount) / ConversionType.USD) * currency).toFixed(2);
+                        break;
+                    case ConversionType.USD:
+                        if (wasMXN) return ((parseFloat(amount) / ConversionType.MXN) * currency).toFixed(2);
+                        if (wasCAD) return (parseFloat(amount) * currency).toFixed(2);
+                        break;
+                }
+                return amount;
+            }
+            
+            const newValue = convertCurrency(`${amount}.${cent}`, currency).split('.');
+            console.log('New Value: ', newValue[0], newValue[1]);
+            setAmount(newValue[0]);
+            setCent(newValue[1]);
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currency]);
 
     useEffect(() => {
         setUrl('http://localhost:3000/api/accounts/transaction');
@@ -65,10 +108,25 @@ function Modal({ accountId, description, onClick, callback }: ITransaction) {
                     </div>
 
                     <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">{description} Amount:</label>
+                        <div className="flex flex-row justify-between">
+                            <label className="block text-gray-700 text-sm font-bold mb-2">{description} Amount:</label>
+                            <div>
+                                <button className="text-center shadow appearance-none border rounded w-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onFocus={
+                                    () => setCurrency(ConversionType.MXN)
+                                }>MXN</button>
+                                <button className="text-center shadow appearance-none border rounded w-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onFocus={
+                                    () => setCurrency(ConversionType.USD)
+                                }>USD</button>
+                                <button className="text-center shadow appearance-none border rounded w-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onFocus={
+                                    () => setCurrency(ConversionType.CA)
+                                } autoFocus={true}>CAD</button>
+                            </div>
+
+                        </div>
+
                         <div className="flex flex-row">
-                            &#36;<input className="shadow appearance-none border rounded w-full mr-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={!isNaN(Number(amount.replace(/,/g, ''))) ? Number(amount.replace(/,/g, '')).toLocaleString() : '0'} onChange={event => setAmount(event.currentTarget.value)} />
-                            <input className="text-center shadow appearance-none border rounded w-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={cent} onChange={event => setCent(('00' + Number(event.currentTarget.value)).slice(-2))} />
+                            <span>&#36;</span><input className="shadow appearance-none border rounded w-full mr-1 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={!isNaN(Number(amount.replace(/,/g, ''))) ? Number(amount.replace(/,/g, '')).toLocaleString() : '0'} onChange={event => setAmount(event.currentTarget.value)} />
+                            <input className="text-center shadow appearance-none border rounded w-10 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" value={!isNaN(Number(cent)) ? cent : '00'} onChange={event => setCent(('00' + Number(event.currentTarget.value)).slice(-2))} />
                         </div>
                     </div>
 

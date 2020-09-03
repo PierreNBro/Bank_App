@@ -10,7 +10,7 @@ export interface ITransaction {
     description: string;
     widthrawal?: string;
     deposit?: string;
-    balance?: string;   
+    balance?: string; 
     callback?: any;
     onClick?: ((event?: MouseEvent) => void) | undefined
 }

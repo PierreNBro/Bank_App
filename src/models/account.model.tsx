@@ -1,7 +1,7 @@
 export enum ConversionType {
-    USD = 2.0,
+    USD = 0.5,
     CA = 1,
-    MXN = .10
+    MXN = 10
 }
 
 export enum AccountType {
